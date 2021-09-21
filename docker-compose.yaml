@@ -1,0 +1,20 @@
+version: "3"
+services:
+  vpnlink:
+    image: vpnrouter
+    build: ./vpnrouter/
+    networks:
+      - vpnnet
+    volumes:
+      - ./vpnconf/:/vpnconf/
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    command: openvpn /vpnconf/client.conf
+  demoservice:
+    image: demoservice
+    build: ./demoservice
+    network_mode: service:vpnlink
+networks:
+  vpnnet: 
